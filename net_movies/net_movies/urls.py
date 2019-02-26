@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^movies', views.Movies.as_view()),
+    url(r'^comments', views.Comments.as_view()),
 ]

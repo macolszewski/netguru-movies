@@ -43,3 +43,11 @@ def movie_as_dict(movie):
         'title': movie.title,
         'year_of_production': movie.year_of_production
     }
+
+
+def comment_as_dict(comment):
+    return {
+        'id': comment.id,
+        'movie': comment.movie.id,
+        'comment_content': comment.comment_content
+    }
