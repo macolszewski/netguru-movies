@@ -11,13 +11,14 @@ def get_movie(title):
         'http://www.omdbapi.com/',
         params={'t': title, 'apikey': settings.OMDB_API_KEY})
 
-    data = response.json()
+    if response.status_code == 200:
+        data = response.json()
 
-    return Movie.objects.get_or_create(
-        title=data["Title"],
-        year_of_production=data['Year'],
-        omdb_data=data)[0]\
-        if data.get('Title', None) else None
+        return Movie.objects.get_or_create(
+            title=data["Title"],
+            year_of_production=data['Year'],
+            omdb_data=data)[0]\
+            if data.get('Title', None) else None
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -34,3 +35,11 @@ class MovieCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieComment
         fields = ['id', 'movie', 'comment_content']
+
+
+def movie_as_dict(movie):
+    return {
+        'id': movie.id,
+        'title': movie.title,
+        'year_of_production': movie.year_of_production
+    }
