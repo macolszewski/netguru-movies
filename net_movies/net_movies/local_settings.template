@@ -1,4 +1,3 @@
 # SECRET_KEY = ''
 # ALLOWED_HOSTS = ['your_hosts']
-# OMDB API KEY
 # OMDB_API_KEY = 'your_API_key'
