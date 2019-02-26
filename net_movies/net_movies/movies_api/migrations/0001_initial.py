@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Movie',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),  # NOQA
                 ('title', models.CharField(max_length=255)),
                 ('year_of_production', models.IntegerField()),
                 ('omdb_data', jsonfield.fields.JSONField()),
@@ -25,9 +25,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MovieComment',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),  # NOQA
                 ('comment_content', models.TextField()),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='movies_api.Movie')),
+                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='movies_api.Movie')),  # NOQA
             ],
         ),
     ]
