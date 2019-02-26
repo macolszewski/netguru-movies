@@ -29,24 +29,23 @@ class Movies(APIView):
         return Response(MovieSerializer(movies, many=True).data)
 
     def post(self, request, format=None):
-        title = request.POST.get('title', None)
+        title = request.data.get('title', None)
 
-        if title:
-            movie = get_movie(title)
+        movie = get_movie(title) if title else None
 
-            if movie:
-                serializer = MovieSerializer(data=movie_as_dict(movie))
+        if movie:
+            serializer = MovieSerializer(data=movie_as_dict(movie))
 
-                if serializer.is_valid():
-                    return Response(
-                        movie.omdb_data, status=status.HTTP_201_CREATED)
+            if serializer.is_valid():
+                return Response(
+                    movie.omdb_data, status=status.HTTP_201_CREATED)
 
         return Response(
             serializer.errors if movie else "Movie not found",
             status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        title = request.POST.get('title', None)
+        title = request.data.get('title', None)
         if title:
             movie = get_object_or_404(
                 Movie, title=title)
@@ -78,14 +77,14 @@ class Comments(APIView):
 
     def post(self, request, format=None):
         data = request.data
-        movie_id = request.POST.get('movie', None)
+        movie_id = request.data.get('movie', None)
 
         if movie_id:
             movie_id = movie_id if movie_id.isdigit()\
                 else get_object_or_404(Movie, title=movie_id).id
             data = {
                 'movie': movie_id,
-                'comment_content': request.POST.get(
+                'comment_content': request.data.get(
                     'comment_content', None)
             }
         serializer = MovieCommentSerializer(data=data)
@@ -97,7 +96,7 @@ class Comments(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        comment_id = request.POST.get('id', None)
+        comment_id = request.data.get('id', None)
 
         if comment_id:
             comment = get_object_or_404(
