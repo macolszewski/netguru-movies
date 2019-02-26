@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^movies', views.Movies.as_view()),
     url(r'^comments', views.Comments.as_view()),
     url(r'^top', views.Top.as_view()),
+    url(r'^$', views.home),
 ]

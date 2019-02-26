@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 from django.db.models import Count
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,6 +12,22 @@ from .utils import (
     movie_as_dict,
     comment_as_dict,
 )
+
+
+def home(request):
+    return HttpResponse(
+        '''
+        <h1>Welcome</h1>
+        To use app check instructions on
+         <a href="https://github.com/macolszewski/netguru-movies">github</a>
+        <h2>Available urls:</h2>
+        <ul>
+        <li><a href="/movies">movies</a></li>
+        <li><a href="/comments">movies comments</a></li>
+        <li><a href="/top">movies ranking</a></li>
+        </ul
+        '''
+    )
 
 
 class Movies(APIView):
