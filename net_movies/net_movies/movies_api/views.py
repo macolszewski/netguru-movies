@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -38,7 +39,7 @@ class Movies(APIView):
 
                 if serializer.is_valid():
                     return Response(
-                        serializer.data, status=status.HTTP_201_CREATED)
+                        movie.omdb_data, status=status.HTTP_201_CREATED)
 
         return Response(
             serializer.errors if movie else "Movie not found",
@@ -76,7 +77,18 @@ class Comments(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = MovieCommentSerializer(data=request.data)
+        data = request.data
+        movie_id = request.POST.get('movie', None)
+
+        if movie_id:
+            movie_id = movie_id if movie_id.isdigit()\
+                else get_object_or_404(Movie, title=movie_id).id
+            data = {
+                'movie': movie_id,
+                'comment_content': request.POST.get(
+                    'comment_content', None)
+            }
+        serializer = MovieCommentSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
@@ -101,3 +113,22 @@ class Comments(APIView):
         return Response(
             serializer.errors if comment_id else "Comment not found",
             status=status.HTTP_400_BAD_REQUEST)
+
+
+class Top(APIView):
+    def get(self, request, format=None):
+        response_data = []
+        movies = Movie.objects.all().annotate(Count('comments'))
+
+        if movies:
+            ranks = enumerate(
+                list(set([m.comments__count for m in movies]))[::-1], 1)
+
+            for rank, comments_count in ranks:
+                for movie in movies.filter(comments__count=comments_count):
+                    response_data.append({
+                        'movie_id': movie.id,
+                        'total_comments': comments_count,
+                        'rank': rank})
+
+        return Response(response_data)

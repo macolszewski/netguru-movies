@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^movies', views.Movies.as_view()),
     url(r'^comments', views.Comments.as_view()),
+    url(r'^top', views.Top.as_view()),
 ]
